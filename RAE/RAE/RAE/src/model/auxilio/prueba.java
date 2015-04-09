@@ -22,6 +22,7 @@ public class prueba extends javax.swing.JFrame {
 
     Calendar da = Calendar.getInstance();
     int consulta = 1;
+    int s =2;
 
     /**
      * Creates new form prueba
