@@ -181,9 +181,9 @@ public class prueba extends javax.swing.JFrame {
         jPanel3.setLayout(null);
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel13.setText("FORMULARIO");
+        jLabel13.setText("FORMULARIO DE AUXILIO ECONOMICO");
         jPanel3.add(jLabel13);
-        jLabel13.setBounds(270, 30, 100, 30);
+        jLabel13.setBounds(140, 30, 450, 30);
 
         jLabel14.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel14.setText("nombre");
@@ -503,7 +503,14 @@ public class prueba extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    public boolean isInteger(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException nfe) {
+        }
+        return false;
+    }
     private void BotonIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonIngresarActionPerformed
         // TODO add your handling code here:
         try {
@@ -549,7 +556,7 @@ public class prueba extends javax.swing.JFrame {
             rs.close();
             stmt.close();
             cn.close();
-            
+
             jTextField2.setText("");
             Buscar.setText("");
 
@@ -562,27 +569,39 @@ public class prueba extends javax.swing.JFrame {
 
     private void BotonEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEnviarActionPerformed
         // TODO add your handling code here:
-        try {
-            Conectadb sqlite = new Conectadb();
-            Connection cn = sqlite.Conectar();
-            Statement stmt = cn.createStatement();
+        if (jTextField11.getText().length() > 0) {
+            JOptionPane.showMessageDialog(this, "Datos Ingresados");
+            
+            if (!isInteger(jTextField8.getText()) || (!isInteger(jTextField9.getText())) || (!isInteger(jTextField10.getText()))){
 
-            String cadSQL = "INSERT INTO form_ben VALUES('" + jTextField7.getText() + "','" + jTextField8.getText() + "','" + jTextField9.getText() + "','" + jTextField10.getText() + "','" + jTextField11.getText() + "')";
-            int r = stmt.executeUpdate(cadSQL);
-            System.out.println(r + "Registro agregado.");
+            try {
+                Conectadb sqlite = new Conectadb();
+                Connection cn = sqlite.Conectar();
+                Statement stmt = cn.createStatement();
 
-            stmt.close();
+                String cadSQL = "INSERT INTO form_ben VALUES('" + jTextField7.getText() + "','" + jTextField8.getText() + "','" + jTextField9.getText() + "','" + jTextField10.getText() + "','" + jTextField11.getText() + "')";
+                int r = stmt.executeUpdate(cadSQL);
+                System.out.println(r + "Registro agregado.");
 
-            jTextField7.setText("");
-            jTextField8.setText("");
-            jTextField9.setText("");
-            jTextField10.setText("");
-            jTextField11.setText("");
+                stmt.close();
 
-        } catch (SQLException ex) {
+                jTextField7.setText("");
+                jTextField8.setText("");
+                jTextField9.setText("");
+                jTextField10.setText("");
+                jTextField11.setText("");
 
+            } catch (SQLException ex) {
+
+            }
+            System.out.println("Estudiante envió formulario// Fecha: " + da.getTime().getDay() + "/" + (da.getTime().getMonth() + 1) + "/" + ((da.getTime().getYear()) + 1900) + "Hora: " + da.getTime().getHours() + ":" + da.getTime().getMinutes() + ":" + da.getTime().getSeconds());
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Ingrese Numeros");
         }
-        System.out.println("Estudiante envió formulario// Fecha: " + da.getTime().getDay() + "/" + (da.getTime().getMonth() + 1) + "/" + ((da.getTime().getYear()) + 1900) + "Hora: " + da.getTime().getHours() + ":" + da.getTime().getMinutes() + ":" + da.getTime().getSeconds());
+        }else {
+            JOptionPane.showMessageDialog(this, "Hay Campos Vacios");
+        }
     }//GEN-LAST:event_BotonEnviarActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -717,37 +736,43 @@ public class prueba extends javax.swing.JFrame {
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
-        try {
-            Conectadb sqlite = new Conectadb();
-            Connection cn = sqlite.Conectar();
-            Statement stmt = cn.createStatement();
-            ResultSet rs;
-            String cadSQL = null;
 
-            cadSQL = "SELECT *FROM form_ben WHERE nombre='" + Buscar.getText() + "';";
-            rs = stmt.executeQuery(cadSQL);
-            System.out.println(cadSQL);
+        if (jTextField11.getText().length() > 0) {
 
-            DefaultTableModel tabla = (DefaultTableModel) jTable3.getModel();
-            Object[] filas = new Object[jTable3.getColumnCount()];
+            try {
+                Conectadb sqlite = new Conectadb();
+                Connection cn = sqlite.Conectar();
+                Statement stmt = cn.createStatement();
+                ResultSet rs;
+                String cadSQL = null;
 
-            while (rs.next()) {
+                cadSQL = "SELECT *FROM form_ben WHERE nombre='" + Buscar.getText() + "';";
+                rs = stmt.executeQuery(cadSQL);
+                System.out.println(cadSQL);
 
-                filas[0] = rs.getString(1);
-                filas[1] = rs.getString(2);
-                filas[2] = rs.getString(3);
-                filas[3] = rs.getString(4);
-                filas[4] = rs.getString(5);
+                DefaultTableModel tabla = (DefaultTableModel) jTable3.getModel();
+                Object[] filas = new Object[jTable3.getColumnCount()];
 
-                tabla.addRow(filas);
+                while (rs.next()) {
+
+                    filas[0] = rs.getString(1);
+                    filas[1] = rs.getString(2);
+                    filas[2] = rs.getString(3);
+                    filas[3] = rs.getString(4);
+                    filas[4] = rs.getString(5);
+
+                    tabla.addRow(filas);
+                }
+
+                rs.close();
+                stmt.close();
+                cn.close();
+
+            } catch (SQLException ex) {
+                System.out.println("No esta Buscando");
             }
-
-            rs.close();
-            stmt.close();
-            cn.close();
-
-        } catch (SQLException ex) {
-            System.out.println("No esta Buscando");
+        } else {
+            JOptionPane.showMessageDialog(this, "El Campo Vacio");
         }
     }//GEN-LAST:event_jButton7ActionPerformed
 
@@ -817,45 +842,48 @@ public class prueba extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonConsultarActionPerformed
 
     private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
-
-        try {
-            Conectadb sqlite = new Conectadb();
-            Connection cn = sqlite.Conectar();
-            Statement stmt = cn.createStatement(); //aqui estas abriendo el statement!!!!
-            //ahi va sin parentesis
-            String j = "delete from form_ben where nombre = '" + jTextField2.getText() + "';"; //intente nmos otra vezok
-            System.out.println(j);
-            int t = stmt.executeUpdate(j);
-            stmt.close(); // ponlo a correr, pero recuerda que ya tiene uno abierto
-            //vas a cerrar aqui // cierra aqui
-            //vas a volver abrir aqui
-            // don
-            DefaultTableModel tableModel = (DefaultTableModel) jTable3.getModel();
-            Object[] filas = new Object[jTable3.getColumnCount()];
-        //eso lo vas a poner aqui
-            for (int i = jTable3.getRowCount() - 1; i >= 0; i--) {
+        if (jTextField11.getText().length() > 0) {
+            try {
+                Conectadb sqlite = new Conectadb();
+                Connection cn = sqlite.Conectar();
+                Statement stmt = cn.createStatement(); //aqui estas abriendo el statement!!!!
+                //ahi va sin parentesis
+                String j = "delete from form_ben where nombre = '" + jTextField2.getText() + "';"; //intente nmos otra vezok
+                System.out.println(j);
+                int t = stmt.executeUpdate(j);
+                stmt.close(); // ponlo a correr, pero recuerda que ya tiene uno abierto
+                //vas a cerrar aqui // cierra aqui
+                //vas a volver abrir aqui
+                // don
+                DefaultTableModel tableModel = (DefaultTableModel) jTable3.getModel();
+                Object[] filas = new Object[jTable3.getColumnCount()];
+                //eso lo vas a poner aqui
+                for (int i = jTable3.getRowCount() - 1; i >= 0; i--) {
                     ((DefaultTableModel) jTable3.getModel()).removeRow(i);
                 }
-            //aqui tambien le falta punt y coma donde?
-            ResultSet rs = stmt.executeQuery("select *from form_ben;");//ESTA ES MOSTRANDO LA LISTA
-            //jmm HELP ya creo como solucionarlo
+                //aqui tambien le falta punt y coma donde?
+                ResultSet rs = stmt.executeQuery("select *from form_ben;");//ESTA ES MOSTRANDO LA LISTA
+                //jmm HELP ya creo como solucionarlo
 
-            while (rs.next()) {
-                filas[0] = rs.getString(1);
-                filas[1] = rs.getString(2);
-                filas[2] = rs.getString(3);
-                filas[3] = rs.getString(4);
-                filas[4] = rs.getString(5);
+                while (rs.next()) {
+                    filas[0] = rs.getString(1);
+                    filas[1] = rs.getString(2);
+                    filas[2] = rs.getString(3);
+                    filas[3] = rs.getString(4);
+                    filas[4] = rs.getString(5);
 
-                tableModel.addRow(filas);
+                    tableModel.addRow(filas);
+                }
+                //y aqui 
+                rs.close();
+                stmt.close();
+                cn.close();
+                //YAA ok espera
+            } catch (SQLException y) {
+                JOptionPane.showMessageDialog(null, y);
             }
-            //y aqui 
-            rs.close();
-            stmt.close();
-            cn.close();
-            //YAA ok espera
-        } catch (SQLException y) {
-            JOptionPane.showMessageDialog(null, y);
+        } else {
+            JOptionPane.showMessageDialog(this, "El Campo Vacio");
         }
 
     }//GEN-LAST:event_BotonEliminarActionPerformed
